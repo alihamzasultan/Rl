@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reinforcement Learning Lectures</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa; /* Light background */
+            color: #495057; /* Slightly darker text */
+            line-height: 1.7; /* Improved readability */
+        }
+
+        nav {
+            background-color: #343a40; /* Darker, modern nav */
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.25rem;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.08); /* Subtle hover */
+        }
+
+        section {
+            padding: 2rem;
+            margin: 1.5rem;
+            background-color: #fff; /* White cards */
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        section h2 {
+            color: #007bff; /* Bootstrap primary color */
+            border-bottom: 0.125rem solid #007bff;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Improved Card Styles */
+        .card {
+            background-color: #fff; /* White card */
+            border: 0.0625rem solid rgba(0, 0, 0, 0.125); /* Light border */
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* Smoother transitions */
+        }
+
+        .card:hover {
+            transform: translateY(-0.125rem); /* Slight lift on hover */
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            padding: 1rem;
+            cursor: pointer;
+            background-color: #f1f3f5; /* Light gray header */
+            color: #212529; /* Darker header text */
+            font-weight: 500; /* Semi-bold */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .card-header:hover {
+            background-color: #e2e6ea; /* Even lighter on hover */
+        }
+
+        .card-body {
+            padding: 1rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .card-body p {
+            margin-bottom: 0.75rem;
+        }
+
+        .card-body ul, .card-body ol {
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Accordion */
+        .accordion .card {
+            border-bottom: none;
+            border-radius: 0; /* Remove bottom rounding */
+        }
+
+        .accordion .card:first-child {
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+
+        .accordion .card:last-child {
+            border-bottom-left-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: #343a40; /* Dark footer */
+            color: #fff;
+            margin-top: 3rem;
+        }
+
+        .example-box {
+            background-color: #f8f9fa; /* Light example box */
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="#lecture9">Lecture 9</a></li>
+            <li><a href="#lecture10">Lecture 10</a></li>
+            <li><a href="#lecture11">Lecture 11</a></li>
+            <li><a href="#lecture12">Lecture 12</a></li>
+            <li><a href="#lecture13">Lecture 13</a></li>
+            <li><a href="#lecture14">Lecture 14</a></li>
+            <li><a href="#lecture16">Lecture 16</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <!-- Lecture 9: On-policy Prediction with Approximation -->
+        <section id="lecture9">
+            <h2>Lecture 9: On-policy Prediction with Approximation</h2>
+            <div class="accordion">
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('largeScaleRL')">
+                        Large-Scale RL: Why we need approximation
+                    </div>
+                    <div class="card-body" id="largeScaleRL">
+                        <p><b>Definition:</b> Reinforcement Learning in very large state spaces requires approximation to be feasible.</p>
+                        <p><b>Why?</b> Tabular methods (like simple Q-tables) become impossible to use because the state space explodes in size. We can't store or visit every state!</p>
+                        <div class="example-box">
+                            <b>Example:</b>  Imagine trying to learn to play chess by memorizing the best action for every board position. There are too many possibilities!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('valueFunctionApproximation')">
+                        Value-Function Approximation: Generalizing what we learn
+                    </div>
+                    <div class="card-body" id="valueFunctionApproximation">
+                        <p><b>Definition:</b> Using a function (like a neural network) to estimate the value function instead of a lookup table.</p>
+                        <p><b>How it Works:</b> The function takes a state as input and outputs its estimated value. By using a function, we can <i>generalize</i>: states that are similar (according to the function) will have similar values, even if we haven't visited them before.</p>
+                        <div class="example-box">
+                            <b>Example:</b> Two almost identical images of a cat should have close value approximation, like having 80% and 81% propablity to happen..
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="card">
+                    <div class="card-header" onclick="toggleCard('predictionObjective')">
+                        Prediction Objective: What are we trying to minimize?
+                    </div>
+                    <div class="card-body" id="predictionObjective">
+                        <p><b>Definition:</b> A mathematical way to describe how well our value function approximation is doing.</p>
+                       <p><b>How it Works:</b>  We need a way to say "this is a good approximation" or "this is a bad approximation." One common objective is to minimize the Mean Squared Value Error (VE) between the true value function and our approximation.</p>
+                        <div class="example-box">
+                             <code>Mean Squared Value Error = VE(w) = ∑(s∈ S) [υπ (s) - (s,w)]</code>, Where  <code>u(s)</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('stochasticGradientMethods')">
+                        Stochastic-Gradient Methods: Learning a little at a time
+                    </div>
+                    <div class="card-body" id="stochasticGradientMethods">
+                        <p><b>Definition:</b> An iterative method for finding the minimum of a function by taking small steps in the direction of the negative gradient.</p>
+                        <p><b>In RL:</b> SGD is used to update the parameters of our value function approximation (e.g., the weights of a neural network) to reduce the error between the predicted value and the target value.</p>
+                         <div class="example-box">
+                            <b>How to learn:</b>Imagine adjusting the knobs of a complex machine one at a time to optimize the output.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('featureConstruction')">
+                        Feature Construction for Linear Methods: Representing the world
+                    </div>
+                    <div class="card-body" id="featureConstruction">
+                        <p><b>Definition:</b> Choosing the right features is key to good performance with linear methods.</p>
+                        <p><b>Why?</b> Linear methods can only learn linear relationships between features and the value function. If the features are poorly chosen, the method won't be able to learn well.</p>
+                         <div class="example-box">
+                             <b>Example:</b> For a robot, choosing to make the location the feature could provide more efficient results, compared to color or weight.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('nonlinearApproximation')">
+                        Nonlinear Function Approximation: Powerful learners
+                    </div>
+                    <div class="card-body" id="nonlinearApproximation">
+                        <p><b>Definition:</b>  Using nonlinear functions (like neural networks) to approximate the value function.</p>
+                        <p><b>Why?</b> Nonlinear functions can learn more complex relationships than linear functions, allowing them to handle more challenging problems.</p>
+                          <div class="example-box">
+                             <b>Example:</b> ANNs are used because their non Linearities, and learning from them provides better outputs to the Q-function.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('memoryKernelMethods')">
+                        Memory-based and Kernel-based Function Approximation: Remembering and reusing experience
+                    </div>
+                    <div class="card-body" id="memoryKernelMethods">
+                        <p><b>Definition:</b>  These methods store training examples in memory and use them to estimate the value of new states.</p>
+                       <p><b>How?</b> To see value new estimate, a set of examples of retrieve is used memory and is the used to compute and value estimate.
+                       </p>
+
+                    </div>
+                </div>
+
+                  <div class="card">
+                    <div class="card-header" onclick="toggleCard('summary9')">
+                        Summary: On-policy Prediction with Approximation
+                    </div>
+                    <div class="card-body" id="summary9">
+                    <p><b>Key Takeaway:</b> Function approximation is crucial for scaling RL to large, complex problems. Choosing the right approximation method and features can have a big impact on performance.</p>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lecture 10: On-policy Control with Approximation -->
+        <section id="lecture10">
+            <h2>Lecture 10: On-policy Control with Approximation</h2>
+             <div class="accordion">
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('controlWithVFA')">
+                        Control with VFA: Learning how to act
+                    </div>
+                    <div class="card-body" id="controlWithVFA">
+                        <p><b>Policy Evaluation:</b> We use function approximation to estimate the value function of the current policy: <code>ĝ(,, w) ≈ qπ</code></p>
+                        <p><b>Policy Improvement:</b> We use a policy improvement strategy to update the policy. A common choice is ε-greedy action selection.</p>
+                          <div class="example-box">
+                             <b>Explanation:</b> The E-greedy helps by the exploartions from the value, that if the action doesnt provide the best value, we continue the exploration.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('actionValueFunctionApproximation')">
+                        Action-Value Function Approximation: Estimating Q-values with functions
+                    </div>
+                    <div class="card-body" id="actionValueFunctionApproximation">
+                      <p><b>Goal:</b>  To find the action-value function Q(s, a), that is minimize Mean Squared value Error<code>ĝ(S, A, w) ≈ q„(S, A)</code></p>
+                       <div class="example-box">
+                             <b>Formuala:</b> <code>J(w) = Επ [(qπ(S, A) – ĝ(S, A, w))²]</code>
+                       </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('linearActionValueFunctionApproximation')">
+                         Linear Action-Value Function Approximation: A simple approach
+                    </div>
+                    <div class="card-body" id="linearActionValueFunctionApproximation">
+                       <p><b>Definition:</b> Using a linear function to approximate the action-value function.</p>
+                        <p> To Represent state and action by this feauture vector:</p>
+                        <p><code>x(S, A) = 
+                        \begin{pmatrix}
+                        x₁(S, A) \\
+                        \vdots \\
+                        x_d(S, A)
+                        \end{pmatrix}
+                        </code></p>
+                         <div class="example-box">
+                             <b>Linear Combination:</b><code>  ĝ(S, A, w) = x(S, A) w = ∑xj(S, A)wj</code>
+                             <p>Where each is the weihgt and x is the actions and atate</p>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('incrementalControlAlgorithms')">
+                      Incremental Control Algorithms: Updating step-by-step
+                    </div>
+                    <div class="card-body" id="incrementalControlAlgorithms">
+                        <p><b>Definition:</b> Algorithms that update the value function approximation after each step in the environment.</p>
+                         <div class="example-box">
+                            <p><b> MC Updates</b>: <code>Δω = α(Gt - (St, At, w))∇wĝ(St, At, w)</code></p>
+                             <p><b> TD Updates</b>:<code>Δω = α(Rt+1 + (St+1, At+1, w) - (St, At, w)) wĝ(St, At, w)</code></p>
+                              <p><b>TD(λ) Forward View Updates</b>:<code>Δω = a(q - (St, At, w))∇wq(St, At, w)</code></p>
+                               <p><b>TD(λ) Backward View Updates</b>:<code>Δω = αδt Et</code></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('batchReinforcementLearning')">
+                      Batch Reinforcement Learning: Learning from experience replay
+                    </div>
+                    <div class="card-body" id="batchReinforcementLearning">
+                      <p><b>Definition:</b> A family of RL methods that seek to find the best-fitting value function by using a batch of experience data (e.g., from an experience replay buffer).</p>
+                       <div class="example-box">
+                            <p>It is simple but not always the most efficent. </p>
+
+                       </div>
+
+                    </div>
+                </div>
+
+                 <div class="card">
+                    <div class="card-header" onclick="toggleCard('dqn')">
+                       DQN: Combining Deep Learning with Q-Learning
+                    </div>
+                    <div class="card-body" id="dqn">
+                     <p> <b>Definition:</b>  Deep Q-Network (DQN) is a reinforcement learning algorithm that uses deep neural networks to approximate the Q-value function.</p>
+                          <div class="example-box">
+                              <p><b>Techniques:</b> Combining to Deep Q function
+                           <br> <b>Experince </b> to stablize the action for the action function
+                            </p>
+
+                       </div>
+                    </div>
+                </div>
+
+                  <div class="card">
+                    <div class="card-header" onclick="toggleCard('summary10')">
+                      Summary: On-policy Control with Approximation
+                    </div>
+                    <div class="card-body" id="summary10">
+                    <p>The most suitible supervisoed learnigns can be applied to help with all tasks  for the learn. </p>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- Lecture 11: Off-policy Methods with Approximation -->
+        <section id="lecture11">
+            <h2>Lecture 11: Off-policy Methods with Approximation</h2>
+             <div class="accordion">
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('offPolicyMethods')">
+                        Off Policy Methods: Learning from different sources
+                    </div>
+                    <div class="card-body" id="offPolicyMethods">
+                         <p><b>Definition:</b>  Off policy learning is decoupled bettwen data colllection and policy udpates</p>
+                         <div class="example-box">
+                            <p><b>Example</b>This means and help use with q learning, and it alosw Q-Networks to be samples. </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('offPolicyApproximation')">
+                        Off Policy Approximation: More Complex Goals
+                    </div>
+                    <div class="card-body" id="offPolicyApproximation">
+                       <p><b>Definition:</b> We want the learn ing of value that get to by the bahavior by a policityy. </p>
+                      <div class="example-box">
+                             <b>Explanation:</b> Its means the can hepl learn about to by set of the functions.
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="card">
+                    <div class="card-header" onclick="toggleCard('semiGradientMethods')">
+                        Semi-gradient Methods: Simpler, but sometimes unstable
+                    </div>
+                    <div class="card-body" id="semiGradientMethods">
+                     <p><b>Definition:</b>  These method can be applied to the the part of the challange of off plociy learing but not te second part that can be used on the update destribution.</p>
+                         <div class="example-box">
+                             <b> Explanation: </b> But sometime, unfortanetly it is often used the succesffuly to work.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('emphaticTDMethods')">
+                       Emphatic-TD Methods: Trying to be more stable
+                    </div>
+                    <div class="card-body" id="emphaticTDMethods">
+                       <p> <b>Definition:</b>   Emphatic-TD Methods are desinges to addresses deadly trad problem from ogg policy learning</p>
+                          <div class="example-box">
+                             <b>Explanation:</b>  THey use achive stablity to the to re the weighred a  function.
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('challengesInstability')">
+                       Challenges and Instability: Things can go wrong!
+                    </div>
+                    <div class="card-body" id="challengesInstability">
+                      <p><b>Definition:</b> Deadly trade include off policy  learning from approximation that lead intos divergence</p>
+                    </div>
+                </div>
+
+                  <div class="card">
+                    <div class="card-header" onclick="toggleCard('summary11')">
+                      Summary: Off-policy with Approximation
+                    </div>
+                    <div class="card-body" id="summary11">
+                       <p> <b>Key takeaway:</b>  You shoul have to know to the by the desion. </p>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- Lecture 12: Policy Gradient Theorem -->
+        <section id="lecture12">
+            <h2>Lecture 12: Policy Gradient Theorem</h2>
+             <div class="accordion">
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('policyGradientTheorem')">
+                         Policy Gradient Theorem: Directly optimizing policies
+                    </div>
+                    <div class="card-body" id="policyGradientTheorem">
+                         <p><b>Definition:</b> policy geradent therom is a cool concert enableing agent the geradent for directly for optimal polcies.  </p>
+                           <p><b>Expalantion:</b> It relys on optiming  parameterized policies and long tern gradent desent to give direct improve ment using proabilities.</p>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('policyGradientAlgorithms')">
+                         Policy Gradient Algorithms: Two main types
+                    </div>
+                    <div class="card-body" id="policyGradientAlgorithms">
+                         <p> <b>Definition:</b>  The re are mulitple Algorithems with Policy gerandet and actic certic.</p>
+                            <div class="example-box">
+                             <b>Rein force</b> It a Monte crlo based  that used the value to the relize the the policy . <br> <b>Actic Certic</b> combine the policy geradent  function
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                   <div class="card-header" onclick="toggleCard('proximalPolicyOptimization')">
+                         Proximal Policy Optimization: (PPO) - Stay close to your old policy!
+                    </div>
+                    <div class="card-body" id="proximalPolicyOptimization">
+                           <p><b>Definition:</b> It an Geradent algrihtem  used to tarin agens and enusre stablaity in polciew used</p>
+                            <div class="example-box">
+                             <b>Explanation:</b> By staying close the new perofm we caould to be for what is is needed.
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="card">
+                    <div class="card-header" onclick="toggleCard('REINFORCEAlgorithm')">
+                        REINFORCE Algorithm
+                    </div>
+                    <div class="card-body" id="REINFORCEAlgorithm">
+                        <p><b>Definition:</b> REINFORCE is a fundamental policy gradient algorithm. It directly optimizes a policy by updating its parameters based on the rewards received after taking actions.</p>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                     <div class="card-header" onclick="toggleCard('actorCriticMethods')">
+                         Actor-Critic Methods
+                    </div>
+                    <div class="card-body" id="actorCriticMethods">
+                        <p><b>Definition:</b> Actor-Critic Algorithm is a type of reinforcement learning algorithm that combines aspects of both policy-based methods (Actor) and value-based methods (Critic).</p>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('baselineTechniques')">
+                       Baseline Techniques: Reducing variance
+                    </div>
+                    <div class="card-body" id="baselineTechniques">
+                       <p><b>Definition:</b>Balseing Techqnuies are used to primarly and redue to value and varience.</p>
+
+                    </div>
+                </div>
+
+                   <div class="card">
+                    <div class="card-header" onclick="toggleCard('summary12')">
+                      Summary
+                    </div>
+                    <div class="card-body" id="summary12">
+                     <p><b>Key takeaway:</b> To get what should  , used then function gerades  to the to best you.
+</p>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- Lecture 13: Deep Reinforcement Learning -->
+        <section id="lecture13">
+            <h2>Lecture 13: Deep Reinforcement Learning</h2>
+             <div class="accordion">
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('deepReinforcementLearning')">
+                        Deep Reinforcement Learning: Combining DL and RL
+                    </div>
+                    <div class="card-body" id="deepReinforcementLearning">
+                       <p><b>Definition:</b> Deep RL combines and dl and creat angent that learns the decesoins based</p>
+                        <div class="example-box">
+                             <b>Examples:</b> We can see it on autonomouses drones, or on smart  robots.
+                        </div>
+                    </div>
+                </div>
+
+               <div class="card">
+                    <div class="card-header" onclick="toggleCard('drlWorking')">
+                       DRL Working: How does it work?
+                    </div>
+                    <div class="card-body" id="drlWorking">
+                         <p><b>Steps:</b>  in DRL ans agent intercater it with eniroment to learing optimal decsens</p>
+                           <ol>
+                           <li>We Construct and agent and Setup the issues</li>
+                           <li> The ANgent keep trach of the it experience and update the methond with the decessions</li>
+                           <li>Stirk a balence of with the approace used </li>
+                           </ol>
+
+                    </div>
+                </div>
+
+                 <div class="card">
+                    <div class="card-header" onclick="toggleCard('Atari')">
+                        Atari: A great environment for testing
+                    </div>
+                    <div class="card-body" id="Atari">
+                      <p><b>Definition:</b>   This eniroment based 3d spaces that can be applied and leare it.</p>
+                          <div class="example-box">
+                             <b>Exapltion:</b> Its not so easy to make so much high values and and high 
+                        </div>
+                    </div>
+                </div>
+                   <div class="card">
+                    <div class="card-header" onclick="toggleCard('reinfocementLearningGoGame')">
+                     Reinforcement Learning for the Go Game: A big Challenge
+                    </div>
+                     <div class="card-body" id="reinfocementLearningGoGame">
+                          <p><b>Definiton:</b> To make it a great to is in to .</p>
+                           <ul> 
+                           <li> We have the best that be found</li>
+                           <li> It is also a greta to best </li>
+
+                           </ul>
+                           </div>
+                </div>
+
+                   <div class="card">
+                      <div class="card-header" onclick="toggleCard('alphaGozero')">
+                     AlphaGo Zero: Human-level is now out.
+                    </div>
+                     <div class="card-body" id="alphaGozero">
+                         <p><b>Definition:</b> this moved for you can doment kownlage is the consited the the to see the best to rule. </p>
+                           <ul>
+                               <li> The use best and is the to have better the .</li>
+                               <li>The  we use the to help help do by it the best do that to is good.</li>
+                            </ul>
+                         </p>
+                    </div>
+                   </div>
+                    <div class="card">
+                    <div class="card-header" onclick="toggleCard('summary13')">
+                     Summary: Deep reinforcement Learning.
+                    </div>
+                     <div class="card-body" id="summary13">
+                         <p> To help to learn morre and value for what is use and the reasone. </p>
+                    </div>
+                   </div>
+             </div>
+        </section>
+
+        <!-- Lecture 14: RL and Transfer Learning -->
+        <section id="lecture14">
+            <h2>Lecture 14: RL and Transfer Learning</h2>
+            <div class="accordion">
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('transferLearning')">
+                       Transfer Learning: Use other knoleadge that use to do.
+                    </div>
+                    <div class="card-body" id="transferLearning">
+                         <p> <b>Definition:</b> use experiance that we take we beffited and learning from better perofm to it
+                        </p>
+
+                    </div>
+                </div>
+
+                 <div class="card">
+                   <div class="card-header" onclick="toggleCard('MetaLearning')">
+                      Meta Learning to  learn quickly
+                    </div>
+                    <div class="card-body" id="MetaLearning">
+                         <p><b>Definition:</b> The most have multi tasks to find the value is the learn the tasks</p>
+                          <p><b>Explanation:</b> The value is the clesly in to the muilt task is the find</p>
+                    </div>
+                </div>
+
+                   <div class="card">
+                    <div class="card-header" onclick="toggleCard('MetaLearningWithSupervisedLearning')">
+                       Meta Learning With Supervised Learning: Training a model for learning other tasks
+                    </div>
+                    <div class="card-body" id="MetaLearningWithSupervisedLearning">
+                        <p> <b>Explanation:</b> Meta the training datses its the that the traing the test it seds.
+
+                        </p>
+
+                    </div>
+                </div>
+
+                   <div class="card">
+                    <div class="card-header" onclick="toggleCard('ContextualPoliciesAndMetaLearning')">
+                       Contextual Policies And MetaLearning: Adapting to different situations
+                    </div>
+                    <div class="card-body" id="ContextualPoliciesAndMetaLearning">
+                      <p>formly simply the  atate spaces it can  be the  the  deffice by the contex  can it be used from the to see the is in from of the mult tasks.</p>
+
+                    </div>
+                   </div>
+
+                     <div class="card">
+                    <div class="card-header" onclick="toggleCard('MetaRLWithRecurrentPolicies')">
+                      Meta-RL With Recurrent Policies: Use memory to train
+                    </div>
+                    <div class="card-body" id="MetaRLWithRecurrentPolicies">
+                        <p><b>Definition:</b> Recurent that by all means is we be that is done to se the the that be find. </p>
+
+                    </div>
+                   </div>
+
+                    <div class="card">
+                    <div class="card-header" onclick="toggleCard('ReinfocementMLandComouterVision')">
+                      Reinforcement ML and Computer Vision - Make the robots see
+                    </div>
+                    <div class="card-body" id="ReinfocementMLandComouterVision">
+                      <p>Conputer vision is the it about to see that help to the the images. .</p>
+
+                    </div>
+                   </div>
+
+                     <div class="card">
+                    <div class="card-header" onclick="toggleCard('summary14')">
+                     Summary:  Reinfocement and Transfer.
+                    </div>
+                    <div class="card-body" id="summary14">
+                         <p>To leare morw can be. The best to alwyas be able to more.
+</p>
+                    </div>
+                   </div>
+            </div>
+        </section>
+
+         <!-- Lecture 16: Inverse Reinforcement Learning -->
+        <section id="lecture16">
+            <h2>Lecture 16: Inverse Reinforcement Learning</h2>
+            <div class="accordion">
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('challengesML')">
+                       Challenges ML
+                    </div>
+                    <div class="card-body" id="challengesML">
+                      <p> <b>Defenttation:</b> One of the goals and machine can do it too and better. .</p>
+
+                    </div>
+                </div>
+
+                   <div class="card">
+                    <div class="card-header" onclick="toggleCard('ChallengesRL')">
+                      Challenges RL: Creating effective reward functions
+                    </div>
+                    <div class="card-body" id="ChallengesRL">
+                         <p><b>Definition:</b> The it has to the find throught of by time to see throught it.</p>
+                         <ul>
+                         <li>Reward is hard.</li>
+                         <li>It  the  hard too know to  see where is done</li>
+                         <li> We always can use thst</li>
+                         </ul>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('InverseReinforcementLearning')">
+                     Inverse Reinforcement Learning: Learning the reward!
+                    </div>
+                    <div class="card-body" id="InverseReinforcementLearning">
+                         <p><b>Definition:</b>  RL is the can be trated out and that can help from each  to see the value.</p>
+                         <li>The best to have</li>
+                         <li>Is always best to know </li>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" onclick="toggleCard('apprenticeshipLearning')">
+                     Apprenticeship Learning: Learning From an Expert
+                    </div>
+                    <div class="card-body" id="apprenticeshipLearning">
+                         <p><b>Definition:</b> Here are the to and solve the algorithhem and it used to the see the solution and for the value that it</p>
+
+                    </div>
+                </div>
+
+                 <div class="card">
+                    <div class="card-header" onclick="toggleCard('applicationDisadvantages')">
+                     Application and Disadvantages
+                    </div>
+                    <div class="card-body" id="applicationDisadvantages">
+                        <p> <b>Defintiion:</b> It helps to get betwwen to by and simulat highway diving and provede .</p>
+
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-header" onclick="toggleCard('summary16')">
+                     Summary:
+                    </div>
+                    <div class="card-body" id="summary16">
+                         <p> <b>Key TakeAway:</b>  Use learning. </p>
+                    </div>
+                  </div>
+            </div>
+        </section>
+
+    </main>
+
+     <footer >
+        <p>© 2024 Reinforcement Learning Lectures. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleCard(cardId) {
+            var cardBody = document.getElementById(cardId);
+            if (cardBody.style.display === "none") {
+                cardBody.style.display = "block";
+            } else {
+                cardBody.style.display = "none";
+            }
+        }
+
+      //More Javascript can be added for other functionalities in this Web Page.
+    </script>
+
+</body>
+</html>
