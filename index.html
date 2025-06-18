@@ -138,6 +138,23 @@
             padding: 0.75rem;
             margin-top: 0.5rem;
         }
+                /* Table Styles */
+                table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        th, td {
+            border: 1px solid #ced4da;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #adb5bd;
+            color: #fff;
+        }
 
     </style>
 </head>
@@ -151,12 +168,62 @@
             <li><a href="#lecture12">Lecture 12</a></li>
             <li><a href="#lecture13">Lecture 13</a></li>
             <li><a href="#lecture14">Lecture 14</a></li>
-            <li><a href="#lecture15">Lecture 15</a></li>
+            <li><a href="#lecture16">Lecture 16</a></li>
         </ul>
     </nav>
 
     <main>
+        <section id="method-selection">
+            <h2>Choosing the Right RL Method: A Quick Guide</h2>
+            <p>This table summarizes when to use which RL methods based on different scenarios, along with relatable examples:</p>
 
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Suitable Method(s)</th>
+                        <th>Everyday Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Small State Space (e.g., Tic-Tac-Toe)</td>
+                        <td>Tabular Methods (Q-learning, SARSA)</td>
+                        <td>Memorizing all possible move combinations in Tic-Tac-Toe.</td>
+                    </tr>
+                    <tr>
+                        <td>Large/Continuous State Space (e.g., Self-Driving Car)</td>
+                        <td>Function Approximation (DQN, Policy Gradients)</td>
+                        <td>A car learning to drive in a complex city environment.</td>
+                    </tr>
+                    <tr>
+                        <td>Need to learn from other policies</td>
+                        <td>Off-Policy Methods (Q-learning, DQN)</td>
+                        <td>Learning to cook by watching different chefs online.</td>
+                    </tr>
+                     <tr>
+                        <td>Unsafe Training Environment</td>
+                        <td>Apprenticeship Learning (Imitation)</td>
+                        <td>Learning to drive under a test trainer.</td>
+                    </tr>
+                     <tr>
+                        <td>High Dimensional Data:</td>
+                        <td>Transfer Learning , META learning</td>
+                        <td>Using Previous knowldeadge that we have. </td>
+                    </tr>
+                    <tr>
+                        <td>Training on limited amount of Data</td>
+                        <td>Semi-gradient Methods</td>
+                        <td>Training A model with 80% acuracy and low data. </td>
+                    </tr>
+                     <tr>
+                        <td>When the Data is always varying with non stationary target</td>
+                        <td>DQN and Memory Methods</td>
+                        <td>Stock prediction Model or AI weather app. </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
         <!-- Lecture 9: On-policy Prediction with Approximation -->
         <section id="lecture9">
             <h2>Lecture 9: On-policy Prediction with Approximation</h2>
@@ -685,9 +752,9 @@
             </div>
         </section>
 
-         <!-- Lecture 15: Inverse Reinforcement Learning -->
-        <section id="lecture15">
-            <h2>Lecture 15: Inverse Reinforcement Learning</h2>
+         <!-- Lecture 16: Inverse Reinforcement Learning -->
+        <section id="lecture16">
+            <h2>Lecture 16: Inverse Reinforcement Learning</h2>
             <div class="accordion">
                 <div class="card">
                     <div class="card-header" onclick="toggleCard('challengesML')">
@@ -747,10 +814,10 @@
                   </div>
 
                   <div class="card">
-                    <div class="card-header" onclick="toggleCard('summary15')">
+                    <div class="card-header" onclick="toggleCard('summary16')">
                      Summary:
                     </div>
-                    <div class="card-body" id="summary15">
+                    <div class="card-body" id="summary16">
                          <p> <b>Key TakeAway:</b>  Use learning. </p>
                     </div>
                   </div>
